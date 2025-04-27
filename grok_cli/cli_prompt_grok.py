@@ -41,13 +41,31 @@ def debug_log(message):
         console.print(f"[yellow]DEBUG: {message}[/yellow]")
 
 def clean_response(response):
-    """Clean response by normalizing whitespace and preserving markdown lists."""
+    """Clean response by normalizing whitespace while preserving markdown code blocks and lists."""
     if not response:
         return response
-    response = re.sub(r'\n\s*\n+', '\n\n', response.strip())
-    lines = response.split('\n')
-    cleaned_lines = [re.sub(r'\s+', ' ', line).strip() if not line.strip().startswith(('1.', '2.', '3.', '4.', '•')) else line.strip() for line in lines]
-    return '\n'.join(cleaned_lines).strip()
+
+    # Split response into parts: code blocks and non-code blocks
+    parts = re.split(r'(```.*?```)', response, flags=re.DOTALL)
+    cleaned_parts = []
+
+    for part in parts:
+        if part.startswith("```") and part.endswith("```"):
+            # Preserve code block as-is, including indentation
+            cleaned_parts.append(part)
+        else:
+            # Normalize whitespace for non-code parts, preserving markdown lists
+            part = re.sub(r'\n\s*\n+', '\n\n', part.strip())
+            lines = part.split('\n')
+            cleaned_lines = [
+                re.sub(r'\s+', ' ', line).strip() if not line.strip().startswith(('1.', '2.', '3.', '4.', '•')) else line.strip()
+                for line in lines
+            ]
+            cleaned_part = '\n'.join(cleaned_lines).strip()
+            if cleaned_part:
+                cleaned_parts.append(cleaned_part)
+
+    return '\n'.join(cleaned_parts).strip()
 
 def calculate_cost(model, prompt_tokens, completion_tokens):
     """Calculate API cost based on model and token usage."""
@@ -290,7 +308,7 @@ def prompt_grok(stream, model):
                 if reasoning_content:
                     console.print(f"[cyan bold]>>> Reasoning:[/cyan bold]")
                     console.print(Markdown(reasoning_content, style="cyan"))
-                # Print the main response in blue (appears as purple in your terminal)
+                # Print the main response in blue
                 console.print(f"[blue bold]>>> Grok 3:[/blue bold]")
                 parts = re.split(r'(```.*?```)', response, flags=re.DOTALL)
                 for part in parts:
@@ -300,7 +318,8 @@ def prompt_grok(stream, model):
                         lang = lines[0].strip() if lines and lines[0].strip() else "text"
                         code = "\n".join(lines[1:] if lines[0].strip() else lines).strip()
                         if code:
-                            console.print(Syntax(code, lang, theme="monokai"))
+                            # Preserve indentation in Syntax rendering
+                            console.print(Syntax(code, lang, theme="monokai", indent_guides=True))
                             console.print()  # Add blank line after code snippet
                     else:
                         part = clean_response(part)
