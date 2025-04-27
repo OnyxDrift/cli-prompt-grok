@@ -2,6 +2,8 @@
 
 **Grok Prompt CLI** is a command-line interface for interacting with xAI's Grok 3 API. It provides a beautified, interactive experience for sending prompts to Grok models (`grok-3-beta` and `grok-3-mini-beta`), with features like syntax-highlighted code blocks, cost estimation, and a loading spinner.
 
+![CLI Prompt Grok Screenshot](https://github.com/OnyxDrift/cli-prompt-grok/blob/main/assets/cli_sample.png)
+
 ## Features
 
 - **Interactive Prompt**: Enter prompts in an interactive shell with green prompts and purple responses (cyan for reasoning).
