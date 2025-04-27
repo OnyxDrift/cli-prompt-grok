@@ -1,6 +1,6 @@
 # Grok Prompt CLI
 
-**Grok Prompt CLI** is a command-line interface for interacting with xAI's Grok 3 API (LLM). It provides a beautified, interactive experience for sending prompts to Grok models (`grok-3-beta` and `grok-3-mini-beta`), with features like syntax-highlighted code blocks, cost estimation, and a loading spinner.
+**Grok Prompt CLI** is a command-line interface for interacting with xAI's Grok 3 API (LLM). It provides a beautified, interactive experience for sending prompts to Grok models (`grok-3-beta` and `grok-3-mini-beta`), with features like syntax-highlighted code blocks, cost estimation, and model selection.
 
 ![CLI Prompt Grok Screenshot](https://github.com/OnyxDrift/cli-prompt-grok/blob/main/assets/cli_sample.png)
 
@@ -43,11 +43,11 @@
     > pip install .
 5. Verify installation
     > which prompt-grok
-    > prompt-grok --help
 
 ## Configuration
 - The script loads configuration from ~/.grok-prompt; you can override this with the GROK_ENV_PATH environment variable.
 - A sample configuration file has been included ('.grok-prompt'); place this in the root of your User folder/Home Directory (~/).
+- Update the configuration file with your API Key (WARNING: you should consider adding your own method of cryptography to keep your API Key secure).
 - Set permissions
     > chmod 600 ~/.grok-prompt
 
